@@ -32,4 +32,4 @@ COPY --from=build /app/build .
 EXPOSE 80
 
 # nginx 실행 할 때 데몬 실행 기능 정지
-ENTRYPOINT [ "nginx","-g","demon off;" ]
+ENTRYPOINT [ "nginx","-g","daemon off;" ]
