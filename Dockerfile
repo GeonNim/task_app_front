@@ -28,6 +28,10 @@ RUN rm -rf *
 # nginx 디렉토리에 리엑트 빌드 파일 복사
 COPY --from=build /app/build .
 
+#404핸들링 오류 해결 
+COPY --from=build /usr/src/app/nginx.conf /etc/nginx/conf.d
+RUN rm /etc/nginx/conf.d/default.conf
+
 # nginx 포트 설정
 EXPOSE 80
 
