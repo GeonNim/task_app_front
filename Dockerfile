@@ -1,3 +1,4 @@
+# Dockerfile code
 # 오피셜 노드 이미지
 FROM node:alpine3.18 as build
 
@@ -25,15 +26,17 @@ WORKDIR /usr/share/nginx/html
 # 기존 도커 컨테이너 삭제
 RUN rm -rf *
 
-# nginx 디렉토리에 리엑트 빌드 파일 복사
-COPY --from=build /app/build .
 
-#404핸들링 오류 해결 
-COPY --from=build /usr/src/app/nginx.conf /etc/nginx/conf.d
-RUN rm /etc/nginx/conf.d/default.conf
+# nginx 디렉토리에 리엑트 빌드 파일 복사
+# COPY --from=build /app/build .
+# Copy the built React app from the build stage to the Nginx HTML directory
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Copy the Nginx configuration file
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 # nginx 포트 설정
 EXPOSE 80
 
-# nginx 실행 할 때 데몬 실행 기능 정지
-ENTRYPOINT [ "nginx","-g","daemon off;" ]
+# nginx 실행 할 때 데몬 실행 기능 끔
+ENTRYPOINT ["nginx", "-g", "daemon off;"]
