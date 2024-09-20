@@ -7,7 +7,7 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../redux/slices/authSlice';
 
-import { naviMenus } from '../utils/data';
+import { navMenus } from '../utils/data';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -50,40 +50,39 @@ const Navbar = ({ menuIdx }) => {
   };
 
   return (
-    <nav className="navi bg-[#212121] w-1/5 h-full rounded-sm border border-gray-500 py-10 px-4 flex flex-col justify-between  ">
-      <div className="logo-wrapper flex w-full items-center justify-center gap-8 ">
+    <nav className="navi bg-[#212121] w-1/5 h-full rounded-sm border border-gray-500 py-10 px-4 flex flex-col justify-between items-center">
+      <div className="logo-wrapper flex w-full items-center justify-center gap-8">
         <div className="logo"></div>
         <h2 className="font-semibold text-xl">
           <Link to="/" className="font-customFontEn">
-            GEON
+            MARSHALL
           </Link>
         </h2>
       </div>
       <ul className="menus">
-        {naviMenus.map((menu, idx) => (
+        {navMenus.map((menu, idx) => (
           <li
             key={idx}
             className={`${
-              idx === menuIdx ? 'bg-gray-950 border border-gray-700' : ''
-            } border border-gray-700 hover:bg-gray-950 transition-all duration-300 rounded-sm mb-1 `}
+              menu.idx === menuIdx ? 'bg-gray-950' : ''
+            } rounded-sm mb-1 border border-gray-700 hover:bg-gray-950 transition-all duration-300`}
           >
-            <Link
-              to={menu.to}
-              className="flex gap-x-4 items-center py-2 px-10   "
-            >
-              {menu.icon} {menu.label}{' '}
+            <Link to={menu.to} className="flex gap-x-4 items-center py-2 px-10">
+              {menu.icon} {menu.label}
             </Link>
           </li>
         ))}
       </ul>
       {isAuthentication ? (
-        <button
-          onClick={handleLogoutClick}
-          className="font-customFontKr flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-2 px-4 w-full rounded-md"
-        >
-          <FcGoogle className="h-5 w-5" />
-          <span className="text-sm">{name}님 Logout</span>
-        </button>
+        <div className="w-4/5 flex flex-center">
+          <button
+            onClick={handleLogoutClick}
+            className="font-customFontEn flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-3 px-4 rounded-md w-full"
+          >
+            <FcGoogle className="h-5 w-5" />
+            <span className="text-sm">{name}님 Logout</span>
+          </button>
+        </div>
       ) : (
         <div className="w-4/5 flex flex-center login-btn">
           <GoogleOAuthProvider clientId={googleClientId}>
