@@ -55,7 +55,7 @@ const Navbar = ({ menuIdx }) => {
         <div className="logo"></div>
         <h2 className="font-semibold text-xl">
           <Link to="/" className="font-customFontEn">
-            MARSHALL
+            GEON
           </Link>
         </h2>
       </div>
