@@ -7,7 +7,7 @@ import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../redux/slices/authSlice';
 
-import { navMenus } from '../utils/data';
+import { naviMenus } from '../utils/data';
 import { Link } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 
@@ -60,7 +60,7 @@ const Navbar = ({ menuIdx }) => {
         </h2>
       </div>
       <ul className="menus">
-        {navMenus.map((menu, idx) => (
+        {naviMenus.map((menu, idx) => (
           <li
             key={idx}
             className={`${
