@@ -2,6 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { jwtDecode } from 'jwt-decode';
 
+import { GoogleLogin, GoogleOAuthProvider } from '@react-oauth/google';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { login, logout } from '../redux/slices/authSlice';
 
@@ -16,37 +18,30 @@ const Navbar = ({ menuIdx }) => {
   const googleClientId = process.env.REACT_APP_AUTH_CLIENT_ID;
   const [isAuthentication, setIsAuthentication] = useState(false);
 
-  const handleLoginSucess = useCallback(
-    (response) => {
-      const decoded = jwtDecode(response.credential);
-      dispatch(login({ authData: decoded }));
-      setIsAuthentication(true);
+  const handleLoginSuccess = useCallback(
+    (credentialResponse) => {
+      try {
+        const decoded = jwtDecode(credentialResponse.credential); // 'credential'에서 JWT 토큰 추출
+        dispatch(login({ authData: decoded }));
+        setIsAuthentication(true);
+        // console.log('Sign in success', credentialResponse);
+      } catch (error) {
+        console.error('Login success handling error', error);
+      }
     },
     [dispatch]
   );
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('authData'));
-
     if (storedData) {
       dispatch(login({ authData: storedData }));
       setIsAuthentication(true);
     }
   }, [dispatch]);
 
-  useEffect(() => {
-    if (window.google) {
-      //구글 아이디가 가져와졌을때
-      window.google.accounts.id.initialize({
-        //구글 값 초기화
-        client_id: googleClientId,
-        callback: handleLoginSucess,
-      });
-    }
-  }, [googleClientId, handleLoginSucess]);
-
-  const handleLoginClick = () => {
-    window.google.accounts.id.prompt(); //로그인 팝업 띄우기
+  const handleLoginError = (error) => {
+    console.log('Google login error', error);
   };
 
   const handleLogoutClick = () => {
@@ -90,14 +85,18 @@ const Navbar = ({ menuIdx }) => {
           <span className="text-sm">{name}님 Logout</span>
         </button>
       ) : (
-        <div className="">
-          <button
-            onClick={handleLoginClick}
-            className="font-customFontKr flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-2 px-4 w-full rounded-md"
-          >
-            <FcGoogle className="h-5 w-5" />
-            Login With Google
-          </button>
+        <div className="w-4/5 flex flex-center login-btn">
+          <GoogleOAuthProvider clientId={googleClientId}>
+            <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onError={handleLoginError}
+            />
+            <button className="font-customFontEn flex justify-center items-center gap-2 bg-gray-300 text-gray-900 py-3 px-4 rounded-md w-full">
+              <FcGoogle className="h-5 w-5" />
+              <span className="text-sm">Google Login</span>
+            </button>
+          </GoogleOAuthProvider>
+          {/* <button onClick={() => handleGoogleLogin()}>Login with Google</button> */}
         </div>
       )}
     </nav>
